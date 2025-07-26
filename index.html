@@ -239,6 +239,21 @@ button {
   font-weight: bold;
   transition: transform 3s ease-out;
 }
+.imgvid {
+  width: 50%;
+  height: auto;
+  max-height: 180px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
+  transition: transform 0.3s, box-shadow 0.3s;
+  object-fit: cover;
+}
+
+.imgvid:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 128, 0, 0.3);
+}
+
 
 .pointer {
   width: 0;
@@ -310,22 +325,27 @@ button {
     <h2 class="section-title">Mock Flyers & Event Gallery</h2>
     <p style="text-align: center;">Here’s a taste of the creativity DJ Fhaga brings to every event.</p>
     <div class="gallery">
-      <img src="faga.jpeg" alt="Neon Rave" onclick="openImage('faga.jpeg')" />
-      <img src="https://via.placeholder.com/300x200.png?text=Game+Night+Poster" onclick="openImage(this.src)" alt="Game Night" />
-      <img src="https://via.placeholder.com/300x200.png?text=Open+Mic+Night" onclick="openImage(this.src)" alt="Open Mic" />
-      <img src="https://via.placeholder.com/300x200.png?text=Movie+Under+the+Stars" onclick="openImage(this.src)" alt="Movie Night" />
+      <img src="faga.jpeg" alt="Neon Rave" onclick="openImage('faga.jpeg')"  class="imgvid"/>
+      <img src="faga2.jpeg" onclick="openImage(this.src)" alt="Game Night"  class="imgvid"/>
+      <img src="faga3.jpeg" onclick="openImage(this.src)" alt="Open Mic" class="imgvid"/>
+      <img src="faga4.jpeg" onclick="openImage(this.src)" alt="Movie Night" class="imgvid"/>
     </div>
   </section>
 
   <section class="video-section">
-    <h3 class="section-title">Here’s a taste of the creativity DJ Fhaga brings to every event.(Video Edition)</h3>
-    <p style="text-align: center;">Click a thumbnail to watch a short campaign video popup!</p>
+    <h4 class="section-title">Here’s a taste of the creativity DJ Fhaga brings to every event.(Video Edition)</h4>
     <div class="video-thumbs">
-      <a onclick="openVideo('videos/fhaga1.mp4')">
-        <img src="https://via.placeholder.com/300x200.png?text=Video+1" alt="Video 1">
+      <a onclick="openVideo('fagVid.mp4')">
+        <img src="fagPic.jpeg" alt="Video 1" width="50" class="imgvid">
       </a>
-      <a onclick="openVideo('videos/fhaga2.mp4')">
-        <img src="https://via.placeholder.com/300x200.png?text=Video+2" alt="Video 2">
+      <a onclick="openVideo('fagVid2.mp4')">
+        <img src="fagPic2.jpeg" alt="Video 2" class="imgvid">
+      </a>
+      <a onclick="openVideo('fagVid3.mp4')">
+        <img src="fagPic3.jpeg" alt="Video 2" class="imgvid">
+      </a>
+      <a onclick="openVideo('fagVid4.mp4')">
+        <img src="fagPic4.jpeg" alt="Video 2" class="imgvid">
       </a>
     </div>
   </section>
