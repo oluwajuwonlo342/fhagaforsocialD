@@ -253,7 +253,22 @@ button {
   transform: scale(1.05);
   box-shadow: 0 6px 12px rgba(0, 128, 0, 0.3);
 }
+.emoji-reactions span {
+  font-size: 2rem;
+  cursor: pointer;
+  margin: 0 10px;
+}
 
+button.danger {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  margin-top: 10px;
+  cursor: pointer;
+}
 
 .pointer {
   width: 0;
@@ -265,6 +280,45 @@ button {
   top: -20px;
   left: calc(50% - 15px);
 }
+.container {
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .upload-wall {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .gallery img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+    }
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    button {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      background: green;
+      color: white;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
 
     @keyframes slideInLeft {
       to {
@@ -297,7 +351,8 @@ button {
 <body>
 
   <header>
-    <h1>From Meh to Energy 🔥💃🕺</h1>
+      
+    <h1 id="tagline">From Meh to Energy 🔥💃🕺</h1>
     <p>Vote Fagbohun Abiola Gbenga (Fhaga) for Social Director</p>
     <button class="btn">Vote Fhaga Now</button>
   </header>
@@ -368,6 +423,43 @@ button {
       <p>🎉 Congrats! Contact us on <a href="https://wa.me/2348028655278" target="_blank">WhatsApp</a> to claim your gift.</p>
     </div>
   </section> 
+  <section class="box">
+    <h2>Event Suggestion Box ✍️</h2>
+    <input type="text" id="eventSuggestion" placeholder="Got a dope idea? Drop it!" style="width:100%; padding:10px;">
+    <button onclick="submitSuggestion()">Send</button>
+    <ul id="suggestionList"></ul>
+  </section>  <section class="box">
+    <h2>Why I Vibe with Fhaga ❤️</h2>
+    <input type="text" id="supportMessage" placeholder="Type your reason..." style="width:100%; padding:10px;">
+    <button onclick="submitSupport()">Post</button>
+    <ul id="supportWall"></ul>
+  </section>  
+  <section class="box">
+    <h2>React to This Campaign! 😎</h2>
+    <div class="emoji-reactions">
+      <span onclick="addReaction('🔥')">🔥</span>
+      <span onclick="addReaction('😂')">😂</span>
+      <span onclick="addReaction('❤️')">❤️</span>
+      <span onclick="addReaction('🎧')">🎧</span>
+    </div>
+       <p id="reactionCount"></p>
+  </section> 
+  <canvas id="confetti-canvas"></canvas>    
+  <div class="container">
+    <section class="upload-wall">
+      <h2>I Vibe with Fhaga 📸</h2>
+      <p>Upload your selfie to show support! Appear on our wall of vibes!</p>
+      <input type="file" id="selfieInput" accept="image/*" />
+      <button onclick="uploadSelfie()">Upload</button>
+      
+    </section>
+<div id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:9999;">
+  <span onclick="closeImage()" style="position:absolute; top:20px; right:30px; color:white; font-size:2rem; cursor:pointer;">&times;</span>
+  <img id="modalImage" src="" style="max-width:90%; max-height:80vh; border-radius:10px;" />
+</div>
+
+    <div class="gallery" id="selfieGallery"></div>
+  </div><audio id="clickSound" src="click.mp3" preload="auto"></audio> <audio id="confettiSound" src="win.mp3" preload="auto"></audio>
 
   <section>
     <h2 class="section-title">Connect with Fhaga</h2>
@@ -388,6 +480,10 @@ button {
     <span class="modal-close" onclick="closeImage()">&times;</span>
     <img id="modalImage" src="" alt="Enlarged Image" />
   </div>
+  <section class="box" id="adminTools" style="display: none; text-align: center;">
+  <h2>Admin Tools 🛠️</h2>
+  <button class="danger" onclick="resetAll()">Reset Everything</button>
+</section>
 
   <footer>
     &copy; 2025 Vote Fhaga Campaign. Built with 💚 by the Tech Team.
@@ -495,6 +591,168 @@ button {
         }
       }, 3200);
     }
+const reactionCounts = JSON.parse(localStorage.getItem('reactions')) || { '🔥': 0, '😂': 0, '❤️': 0, '🎧': 0 };
+
+function addReaction(emoji) {
+  reactionCounts[emoji]++;
+  localStorage.setItem('reactions', JSON.stringify(reactionCounts));
+  renderReactions();
+  updateVibeBar();
+}
+
+function renderReactions() {
+  let display = '';
+  for (const e in reactionCounts) {
+    display += `${e}: ${reactionCounts[e]} `;
+  }
+  document.getElementById('reactionCount').textContent = display;
+  updateVibeBar();
+}
+
+    function updateVibeBar() {
+      const total = Object.values(reactionCounts).reduce((a, b) => a + b, 0);
+      let percent = Math.min(100, total * 10);
+      document.getElementById("vibeBar").style.width = percent + "%";
+    }
+        
+function submitSuggestion() {
+  const input = document.getElementById("eventSuggestion");
+  const list = document.getElementById("suggestionList");
+  if (input.value.trim() !== '') {
+    const suggestions = JSON.parse(localStorage.getItem('suggestions')) || [];
+    suggestions.push(input.value.trim());
+    localStorage.setItem('suggestions', JSON.stringify(suggestions));
+    input.value = '';
+    renderSuggestions();
+  }
+}
+
+function renderSuggestions() {
+  const suggestions = JSON.parse(localStorage.getItem('suggestions')) || [];
+  const list = document.getElementById("suggestionList");
+  list.innerHTML = '';
+  suggestions.forEach(suggestion => {
+    const li = document.createElement("li");
+    li.textContent = suggestion;
+    list.appendChild(li);
+  });
+}
+
+    function submitSupport() {
+  const input = document.getElementById("supportMessage");
+  const list = document.getElementById("supportWall");
+  if (input.value.trim() !== '') {
+    const supports = JSON.parse(localStorage.getItem('supports')) || [];
+    supports.push(input.value.trim());
+    localStorage.setItem('supports', JSON.stringify(supports));
+    input.value = '';
+    renderSupport();
+  }
+}
+
+function renderSupport() {
+  const supports = JSON.parse(localStorage.getItem('supports')) || [];
+  const list = document.getElementById("supportWall");
+  list.innerHTML = '';
+  supports.forEach(msg => {
+    const li = document.createElement("li");
+    li.textContent = msg;
+    list.appendChild(li);
+  });
+}
+
+    
+window.onload = function () {
+  renderPollResults();
+  renderReactions();
+  renderSuggestions();
+  renderSupport();
+};
+// Show reset tools only when admin triggers it
+  document.getElementById("tagline").addEventListener("dblclick", function () {
+    const isAdmin = prompt("Enter admin code:");
+    if (isAdmin === "fhaga2025") {
+      document.getElementById("adminTools").style.display = "block";
+    } else {
+      alert("Access Denied!");
+    }
+  });
+   function resetAll() {
+  if (confirm("Are you sure you want to clear all data? This cannot be undone.")) {
+    localStorage.clear();
+    location.reload();
+  }
+}
+  function playSound(id) {
+    const sound = document.getElementById(id);
+    if (sound) sound.play();
+  }
+
+  function triggerConfetti() {
+    playSound('confettiSound');
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+    });
+  }
+
+  function uploadSelfie() {
+    const input = document.getElementById('selfieInput');
+    const gallery = document.getElementById('selfieGallery');
+    const file = input.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const imgData = e.target.result;
+
+        // Display image
+        const img = document.createElement('img');
+        img.src = imgData;
+img.onclick = () => openImage(imgData);
+gallery.appendChild(img);
+
+        // Save to localStorage
+        let stored = JSON.parse(localStorage.getItem('selfieWall') || '[]');
+        stored.push(imgData);
+        localStorage.setItem('selfieWall', JSON.stringify(stored));
+
+        // Feedback
+        triggerConfetti();
+        playSound('clickSound');
+      };
+      reader.readAsDataURL(file);
+      input.value = '';
+    }
+  }
+
+  function loadStoredSelfies() {
+    const gallery = document.getElementById('selfieGallery');
+    const stored = JSON.parse(localStorage.getItem('selfieWall') || '[]');
+    stored.forEach(src => {
+      const img = document.createElement('img');
+      img.src = src;
+img.onclick = () => openImage(src);
+gallery.appendChild(img);
+
+    });
+  }
+  function openImage(src) {
+  const modal = document.getElementById("imageModal");
+  const modalImage = document.getElementById("modalImage");
+  modalImage.src = src;
+  modal.style.display = "flex";
+}
+
+function closeImage() {
+  const modal = document.getElementById("imageModal");
+  modal.style.display = "none";
+}
+
+
+  window.onload = loadStoredSelfies;
+
   </script>
 
 </body>
