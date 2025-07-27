@@ -402,6 +402,9 @@ button.danger {
       <a onclick="openVideo('fagVid4.mp4')">
         <img src="fagPic4.jpeg" alt="Video 2" class="imgvid">
       </a>
+      <a onclick="openVideo('fagVid5.mp4')">
+        <img src="fagPic5.jpeg" alt="Video 2" class="imgvid">
+      </a>
     </div>
   </section>
 
@@ -410,8 +413,8 @@ button.danger {
     <p id="fhagaFact">Loading fact...</p>
     <button onclick="newFact()">New Fact 🔁</button>
   </section>
-
- <section class="raffle">
+<section id="raffleWrapper">
+  <section class="raffle" id="raffleSection" style="display: none;">
     <h2>🎁 Fhaga Giveaway Wheel</h2>
     <div class="wheel-container">
       <div class="pointer"></div>
@@ -422,7 +425,13 @@ button.danger {
     <div class="whatsapp-link" id="whatsappLink">
       <p>🎉 Congrats! Contact us on <a href="https://wa.me/2348028655278" target="_blank">WhatsApp</a> to claim your gift.</p>
     </div>
-  </section> 
+  </section>
+
+  <div id="nonThursdayMessage" style="display: none; text-align: center; padding: 1rem; background: #ffe6e6; border-radius: 8px; font-weight: bold;">
+    🗓️ The giveaway wheel is only available on Thursdays. Come back soon!
+  </div>
+</section>
+
   <section class="box">
     <h2>Event Suggestion Box ✍️</h2>
     <input type="text" id="eventSuggestion" placeholder="Got a dope idea? Drop it!" style="width:100%; padding:10px;">
@@ -535,7 +544,12 @@ button.danger {
       "Vibes so much, even lecturers want in 😎",
       "If ‘turn up’ had a face, it would be Fhaga.",
       "Even Google searches Fhaga when it needs party ideas.",
-      "They say NEPA waits for his events before giving light. ⚡" 
+      "They say NEPA waits for his events before giving light. ⚡" ,
+      "Even shy people dance when Fhaga’s around.",
+      "You don’t attend a Fhaga event… you experience it.",
+      "He once hyped a crowd using just eye contact. No mic.",
+      "He once turned a rainy day into a party.",
+      "Fhaga’s playlist has 0 skips and 100% vibes."
     ];
 
     function newFact() {
@@ -564,8 +578,10 @@ button.danger {
       "₦200 Airtime 💸",
       "IG shoutout by Fhaga 📢",
       "Fhaga follows you 😎",
+      "₦500 Airtime 💸",
       "Custom party playlist 🔊",
-      "Try again 😅"
+      "Try again 😅",
+      "Comeback Next Thursday 😅"
     ];
     
     function spinWheel() {
@@ -704,7 +720,16 @@ function triggerConfetti() {
     origin: { y: 0.6 },
   });
 }
+// Show spin wheel only on Thursdays
+window.addEventListener('DOMContentLoaded', () => {
+  const today = new Date().getDay(); // 4 = Thursday
 
+  if (today === 4) {
+    document.getElementById("raffleSection").style.display = "block";
+  } else {
+    document.getElementById("nonThursdayMessage").style.display = "block";
+  }
+});
 
   function uploadSelfie() {
     const input = document.getElementById('selfieInput');
