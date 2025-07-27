@@ -434,6 +434,21 @@ button.danger {
     <button onclick="submitSupport()">Post</button>
     <ul id="supportWall"></ul>
   </section>  
+  <canvas id="confetti-canvas"></canvas>    
+  <div class="container">
+    <section class="upload-wall">
+      <h2>I Vibe with Fhaga 📸</h2>
+      <p>Upload your selfie or a selfie with Fhaga to show support! Appear on our wall of vibes!</p>
+      <input type="file" id="selfieInput" accept="image/*" />
+      <button onclick="uploadSelfie()">Upload</button>
+      
+    </section>
+<div id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:9999;">
+  <span onclick="closeImage()" style="position:absolute; top:20px; right:30px; color:white; font-size:2rem; cursor:pointer;">&times;</span>
+  <img id="modalImage" src="" style="max-width:90%; max-height:80vh; border-radius:10px;" />
+</div>
+    <div class="gallery" id="selfieGallery"></div>
+
   <section class="box">
     <h2>React to This Campaign! 😎</h2>
     <div class="emoji-reactions">
@@ -444,21 +459,8 @@ button.danger {
     </div>
        <p id="reactionCount"></p>
   </section> 
-  <canvas id="confetti-canvas"></canvas>    
-  <div class="container">
-    <section class="upload-wall">
-      <h2>I Vibe with Fhaga 📸</h2>
-      <p>Upload your selfie to show support! Appear on our wall of vibes!</p>
-      <input type="file" id="selfieInput" accept="image/*" />
-      <button onclick="uploadSelfie()">Upload</button>
-      
-    </section>
-<div id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:9999;">
-  <span onclick="closeImage()" style="position:absolute; top:20px; right:30px; color:white; font-size:2rem; cursor:pointer;">&times;</span>
-  <img id="modalImage" src="" style="max-width:90%; max-height:80vh; border-radius:10px;" />
-</div>
+  
 
-    <div class="gallery" id="selfieGallery"></div>
   </div><audio id="clickSound" src="click.mp3" preload="auto"></audio> <audio id="confettiSound" src="win.mp3" preload="auto"></audio>
 
   <section>
@@ -687,15 +689,22 @@ window.onload = function () {
     const sound = document.getElementById(id);
     if (sound) sound.play();
   }
+function triggerConfetti() {
+  playSound('confettiSound');
 
-  function triggerConfetti() {
-    playSound('confettiSound');
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-    });
-  }
+  const canvas = document.getElementById('confetti-canvas');
+  const myConfetti = confetti.create(canvas, {
+    resize: true,
+    useWorker: true
+  });
+
+  myConfetti({
+    particleCount: 100,
+    spread: 70,
+    origin: { y: 0.6 },
+  });
+}
+
 
   function uploadSelfie() {
     const input = document.getElementById('selfieInput');
@@ -754,6 +763,7 @@ function closeImage() {
   window.onload = loadStoredSelfies;
 
   </script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 </body>
 </html>
